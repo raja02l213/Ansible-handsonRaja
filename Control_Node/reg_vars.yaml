@@ -1,0 +1,33 @@
+---
+- name: Install web pkg
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install httpd 
+      yum:
+        name: httpd 
+        state: latest
+      register: yum_output
+      ignore_errors: yes
+   
+    - name: print output
+      debug:
+        msg: "{{ yum_output }}"
+    
+    - name: print if failes
+      debug:
+        msg: " *********** Package faile to install *************"
+      when: yum_output.failed == true
+
+    - name: execute  a command
+      shell: 'uptime'
+      register: shell_output
+
+    - name: print shell output
+      debug:
+        msg: "{{ shell_output }}"
+
+    - name: print if shell fails
+      debug:
+        msg: "{{ shell_output['stdout_lines']}}" 

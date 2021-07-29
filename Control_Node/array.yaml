@@ -1,0 +1,12 @@
+users:
+  John:
+    firstname: Smith
+    lastman: John
+    designation: Admin
+    location: London
+
+  Linda:
+    firstname: Linda
+    lastname: Mary
+    designation: Operator
+    location: Paris

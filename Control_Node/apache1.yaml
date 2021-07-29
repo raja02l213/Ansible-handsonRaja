@@ -1,0 +1,59 @@
+---
+- name: Install apache and verify
+  hosts: "{{ servers }}"
+  remote_user: ec2-user
+  become: yes
+  vars: 
+#    web_pkg: httpd
+#    firewall: firewalld
+
+  vars_files:
+#    - vars.yml
+
+  tasks:
+#    - name: invlude vars
+#      include_vars: vars.yml
+
+    - name: Install {{ web_pkg }}
+      yum: 
+        name: 
+          - "{{ web_pkg }}"
+          - "{{ firewall }}"
+        state: latest
+    
+    - name: start {{ web_pkg }}
+      service:
+        name: "{{web_pkg}}"
+        state: started
+        enabled: true
+
+    - name: Enable and start {{ firewall }}
+      service:
+        name: "{{ firewall }}"
+        enabled: true
+        state: started
+
+    - name: open firewall ports
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: copy httpd index.html file content
+      copy:
+        content: "This is serviced by Ansible"
+        dest: /var/www/html/index.html
+
+- name: Verify webservers
+  hosts: localhost
+  become: no
+
+  tasks:
+    - name: test webservers
+      uri:
+        url: http://172.31.23.78
+        status_code: 200
+
+
+

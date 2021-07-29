@@ -1,0 +1,9 @@
+---
+- name: demo custom facts
+  hosts: webservers
+
+  tasks:
+    - name: print custom local facts
+      debug:
+        msg: "{{ ansible_local.web.business.criticality }}"
+      when: ansible_local.web.business.criticality is defined
